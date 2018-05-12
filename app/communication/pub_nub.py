@@ -94,6 +94,8 @@ class SCSubscribeCallback(SubscribeCallback):
             print message.channel, ": ", message.message
             self.fire_in_progress = True
             response = main.calculate_best_route(message.message)
+            for element in response:
+                print element
             pubnub.publish().channel('route-to-fire').message(response).async(my_publish_callback)
             aws.publish(response, '/shmartcity/route/')
         if message.channel == 'update-position':  # message: {next: true}

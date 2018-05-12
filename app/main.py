@@ -3,6 +3,7 @@ from threading import RLock
 from app.city.city_map import CityMap
 import logging
 
+from app.city.street_node import StreetNode
 from app.communication import aws
 from app.search.a_star import a_star_search
 
@@ -314,9 +315,9 @@ def calculate_best_route(message):
 #                u'78': {u'right': u'King Cullen Boulevard E2', u'name': u'Reid Street N1',
 #                        u'straight': u'Reid Street N2', u'lights': False, u'congestion': 0,
 #                        u'position': {u'y': 269.401184, u'x': 256.0765}, u'left': u'King Cullen Boulevard W4'}}
-#
-#
-#
+
+
+
 # def test_build_roads_init(roads_dict):
 #     for entry in roads_dict:
 #         road = roads_dict[entry]
@@ -334,15 +335,13 @@ def calculate_best_route(message):
 #
 #     for road in city_roads:
 #         print(city_roads[road].to_a_string())
-
-
+#
+#
 # test_build_roads_init(entire_city)
-# came_from, total_running_cost, path = search(city_roads["Downey Memorial Way E1"], city_roads["Massive Road W1"])
+#
+# city_roads.create_city(entire_city)
+# path, total_running_cost = a_star_search(city_roads.city_roads["Downey Memorial Way E1"], city_roads.city_roads["Massive Road W1"])
 # counter = 0
 # for p in path:
 #     counter += 1
-#     print("path: ", counter, p.name, total_running_cost[p])
-# counter = 0
-# for c in came_from:
-#     counter += 1
-#     print(counter, c.to_a_string(), total_running_cost[c])
+#     print("path: ", counter, p)
