@@ -30,7 +30,7 @@ class PubNubHandler:
             'all-roads',
             'update-congestion',
             'fire-in-progress',
-            'update-vehicle-position',
+            'update-position',
             'fire-extinguished'
         ]
         self.connected = False
@@ -83,20 +83,24 @@ class SCSubscribeCallback(SubscribeCallback):
             # radio / connectivity is lost, then regained.
 
     def message(self, pubnub, message):
-        print message.channel, ": ", message.message
         if message.channel == 'all-roads':  # {num: {road details}, num {road details} ... }
+            print message.channel, ": ", message.message
             main.build_city(message.message)
         if message.channel == 'update-congestion':  # message: {road: name, congestion: congestion}
             if not self.fire_in_progress:
+                print message.channel, ": ", message.message
                 main.update_congestion(message.message)
         if message.channel == 'fire-in-progress':  # message: {start: road, end: road}
+            print message.channel, ": ", message.message
             self.fire_in_progress = True
             response = main.calculate_best_route(message.message)
             pubnub.publish().channel('route-to-fire').message(response).async(my_publish_callback)
             aws.publish(response, '/shmartcity/route/')
-        if message.channel == 'update-ambulance-position':
+        if message.channel == 'update-position':  # message: {next: true}
+            print message.channel, ": ", message.message
             aws.publish(message.message, '/shmartcity/nextroad/')
         if message.channel == 'fire-extinguished':  # message: {extinguished: true}
+            print message.channel, ": ", message.message
             aws.publish(message.message, '/shmartcity/extinguished/')
             self.fire_in_progress = False
 
