@@ -9,7 +9,6 @@ from AWSIoTPythonSDK.exception import AWSIoTExceptions
 
 myMQTTClient = AWSIoTMQTTClient(str(uuid.uuid1()))  # Add client ID
 
-
 def connect():
     # set up AWS IoT MQTT
     myMQTTClient.configureEndpoint("a3oazwlb9g85vu.iot.us-east-2.amazonaws.com", 8883)  # endpoint
@@ -23,7 +22,7 @@ def connect():
     myMQTTClient.configureMQTTOperationTimeout(5)  # Operation timeout 5 seconds
     # connect to AWS IoT MQTT
     try:
-        myMQTTClient.connect()
+        return myMQTTClient.connect()
     except AWSIoTExceptions:
         print("unable to connect MQTT")
         traceback.print_exc()

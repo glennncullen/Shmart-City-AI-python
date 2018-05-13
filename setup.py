@@ -18,7 +18,7 @@ setup(
     author='Glenn Cullen',
     description='AI for Shmart City',
     install_requires=[
-        'numpy',
-        'pubnub>=4.0.13', 'AWSIoTPythonSDK'
+        'pubnub>=4.0.13',
+        'AWSIoTPythonSDK'
     ]
 )

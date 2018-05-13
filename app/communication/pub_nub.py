@@ -62,34 +62,31 @@ class SCSubscribeCallback(SubscribeCallback):
         self.fire_in_progress = False
 
     def presence(self, pubnub, presence):
-        pass  # handle incoming presence data
+        pass  # must implement abstract method
 
     def status(self, pubnub, status):
         if status.category == PNStatusCategory.PNUnexpectedDisconnectCategory:
             self.failed = True
             self.subscribed = False
-            # This event happens when radio / connectivity is lost
 
         elif status.category == PNStatusCategory.PNConnectedCategory:
             self.subscribed = True
             self.failed = False
-            # Connect event. You can do stuff like publish, and know you'll get it.
-            # Or just use the connected event to confirm you are subscribed for
-            # UI / internal notifications, etc
         elif status.category == PNStatusCategory.PNReconnectedCategory:
             self.subscribed = True
             self.failed = False
-            # Happens as part of our regular operation. This event happens when
-            # radio / connectivity is lost, then regained.
 
     def message(self, pubnub, message):
+        # receive all roads
         if message.channel == 'all-roads':  # {num: {road details}, num {road details} ... }
             print message.channel, ": ", message.message
             main.build_city(message.message)
+        # receive updated congestion
         if message.channel == 'update-congestion':  # message: {road: name, congestion: congestion}
             if not self.fire_in_progress:
                 print message.channel, ": ", message.message
                 main.update_congestion(message.message)
+        # alert that a fire is in progress
         if message.channel == 'fire-in-progress':  # message: {start: road, end: road}
             print message.channel, ": ", message.message
             self.fire_in_progress = True
@@ -98,9 +95,11 @@ class SCSubscribeCallback(SubscribeCallback):
                 print element
             pubnub.publish().channel('route-to-fire').message(response).async(my_publish_callback)
             aws.publish(response, '/shmartcity/route/')
+        # ambulance position has been updated
         if message.channel == 'update-position':  # message: {next: true}
             print message.channel, ": ", message.message
             aws.publish(message.message, '/shmartcity/nextroad/')
+        # fire has been extinguished
         if message.channel == 'fire-extinguished':  # message: {extinguished: true}
             print message.channel, ": ", message.message
             aws.publish(message.message, '/shmartcity/extinguished/')

@@ -12,8 +12,6 @@ class StreetNode:
         self.position = position
         self.max_travel_distance = 586.1679
 
-        self.cost_to_goal = 0
-
     def to_a_string(self):
         s1 = "name: %s" % self.name
         if self.straight is not None:
