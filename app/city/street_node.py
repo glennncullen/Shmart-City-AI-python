@@ -43,7 +43,7 @@ class StreetNode:
 
     def cost_to_road(self, road):
         return int(
-            (road.congestion / 7 * 1000)
+            (road.congestion / 7 * 200)
             + (self.calculate_distance(self.position, road.position) * 1000)
         )
 
